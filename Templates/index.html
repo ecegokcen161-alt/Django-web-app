@@ -5,8 +5,17 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Ece Gökçen Saltan — CV</title>
+
+<title>
+  {% if profile.full_name %}
+    {{ profile.full_name }} — CV
+  {% else %}
+    Ece Gökçen Saltan — CV
+  {% endif %}
+</title>
+
 <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+
 <style>
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
@@ -437,24 +446,70 @@ code {
 }
 </style>
 </head>
+
 <body>
 <main class="page">
 
   <header class="header">
     <div class="header-left">
       <div class="name-line">
-        <span class="name">Ece Gökçen Saltan</span>
+        <span class="name">
+          {% if profile.full_name %}
+            {{ profile.full_name }}
+          {% else %}
+            Ece Gökçen Saltan
+          {% endif %}
+        </span>
       </div>
-      <span class="title-tag">// Information Systems Engineering &nbsp;·&nbsp; 4th Year Student</span>
+
+      <span class="title-tag">
+        {% if profile.title %}
+          // {{ profile.title }}
+        {% else %}
+          // Information Systems Engineering &nbsp;·&nbsp; 4th Year Student
+        {% endif %}
+      </span>
+
       <div class="contact-row">
-        <span class="contact-item"><span class="cdot"></span>Darıca, Kocaeli — Turkey</span>
-        <span class="contact-item"><span class="cdot"></span>+90 544 671 08 16</span>
-        <span class="contact-item"><span class="cdot"></span><a href="mailto:ecegokcen.saltan@stu.pirireis.edu.tr">ecegokcen.saltan@stu.pirireis.edu.tr</a></span>
+        <span class="contact-item">
+          <span class="cdot"></span>
+          {% if profile.location %}
+            {{ profile.location }}
+          {% else %}
+            Darıca, Kocaeli — Turkey
+          {% endif %}
+        </span>
+
+        <span class="contact-item">
+          <span class="cdot"></span>
+          {% if profile.phone %}
+            {{ profile.phone }}
+          {% else %}
+            +90 544 671 08 16
+          {% endif %}
+        </span>
+
+        <span class="contact-item">
+          <span class="cdot"></span>
+          {% if profile.email %}
+            <a href="mailto:{{ profile.email }}">{{ profile.email }}</a>
+          {% else %}
+            <a href="mailto:ecegokcen.saltan@stu.pirireis.edu.tr">
+              ecegokcen.saltan@stu.pirireis.edu.tr
+            </a>
+          {% endif %}
+        </span>
       </div>
     </div>
+
     <div class="photo-wrap">
       <div class="photo-ring"></div>
-      <img src="{% get_media_prefix %}me.jpeg" alt="Ece Gökçen Saltan">
+
+      {% if profile.photo %}
+        <img src="{{ profile.photo.url }}" alt="{{ profile.full_name }}">
+      {% else %}
+        <img src="{% get_media_prefix %}me.jpeg" alt="Ece Gökçen Saltan">
+      {% endif %}
     </div>
   </header>
 
@@ -463,232 +518,362 @@ code {
     <div>
       <section class="section">
         <div class="section-label">About</div>
+
         <p class="about-text">
-          Final-year Information Systems Engineering student at Piri Reis University with hands-on
-          internship experience in server administration, panel management, and technical support.
-          Proficient across multiple programming languages with a focused interest in mobile application
-          development and cybersecurity. Eager to contribute to a challenging internship environment
-          where technical skills can be applied and grown alongside experienced professionals.
+          {% if profile.about %}
+            {{ profile.about }}
+          {% else %}
+            Final-year Information Systems Engineering student at Piri Reis University with hands-on
+            internship experience in server administration, panel management, and technical support.
+            Proficient across multiple programming languages with a focused interest in mobile application
+            development and cybersecurity. Eager to contribute to a challenging internship environment
+            where technical skills can be applied and grown alongside experienced professionals.
+          {% endif %}
         </p>
       </section>
 
       <section class="section">
         <div class="section-label">Experience</div>
 
-        <div class="exp-item">
-          <div class="exp-header">
-            <span class="exp-company">UNNA Informatics &amp; Server Systems</span>
-            <span class="exp-period">Internship — Term 1</span>
-          </div>
-          <div class="exp-role">Systems &amp; Technical Support Intern</div>
-          <ul class="exp-list">
-            <li>Assisted in the setup and configuration of physical and virtual servers.</li>
-            <li>Participated in system installation workflows and OS-level configuration tasks.</li>
-            <li>Provided first-level technical support for infrastructure-related issues.</li>
-            <li>Documented recurring issues and contributed to an internal support knowledge base.</li>
-          </ul>
-        </div>
+        {% for experience in experiences %}
+          <div class="exp-item">
+            <div class="exp-header">
+              <span class="exp-company">{{ experience.company }}</span>
+              <span class="exp-period">{{ experience.period }}</span>
+            </div>
 
-        <hr class="exp-sep">
+            <div class="exp-role">{{ experience.role }}</div>
 
-        <div class="exp-item">
-          <div class="exp-header">
-            <span class="exp-company">UNNA Informatics &amp; Server Systems</span>
-            <span class="exp-period">Internship — Term 2</span>
+            <ul class="exp-list">
+              <li>{{ experience.description|linebreaksbr }}</li>
+            </ul>
           </div>
-          <div class="exp-role">Panel &amp; Systems Management Intern</div>
-          <ul class="exp-list">
-            <li>Managed hosting environments through WHMCS, cPanel, and sPanel control panels.</li>
-            <li>Monitored server health, uptime, and resource usage using system dashboards.</li>
-            <li>Performed routine maintenance tasks including backups, updates, and log reviews.</li>
-            <li>Supported the team in ensuring service continuity and client account operations.</li>
-          </ul>
-        </div>
+
+          {% if not forloop.last %}
+            <hr class="exp-sep">
+          {% endif %}
+
+        {% empty %}
+          <div class="exp-item">
+            <div class="exp-header">
+              <span class="exp-company">UNNA Informatics &amp; Server Systems</span>
+              <span class="exp-period">Internship — Term 1</span>
+            </div>
+            <div class="exp-role">Systems &amp; Technical Support Intern</div>
+            <ul class="exp-list">
+              <li>Assisted in the setup and configuration of physical and virtual servers.</li>
+              <li>Participated in system installation workflows and OS-level configuration tasks.</li>
+              <li>Provided first-level technical support for infrastructure-related issues.</li>
+              <li>Documented recurring issues and contributed to an internal support knowledge base.</li>
+            </ul>
+          </div>
+
+          <hr class="exp-sep">
+
+          <div class="exp-item">
+            <div class="exp-header">
+              <span class="exp-company">UNNA Informatics &amp; Server Systems</span>
+              <span class="exp-period">Internship — Term 2</span>
+            </div>
+            <div class="exp-role">Panel &amp; Systems Management Intern</div>
+            <ul class="exp-list">
+              <li>Managed hosting environments through WHMCS, cPanel, and sPanel control panels.</li>
+              <li>Monitored server health, uptime, and resource usage using system dashboards.</li>
+              <li>Performed routine maintenance tasks including backups, updates, and log reviews.</li>
+              <li>Supported the team in ensuring service continuity and client account operations.</li>
+            </ul>
+          </div>
+        {% endfor %}
       </section>
 
       <section class="section">
         <div class="section-label">Projects</div>
 
-        <div class="exp-item">
-          <div class="exp-header">
-            <span class="exp-company">ML / ANN — Artificial Neural Network Project</span>
-            <span class="exp-period">Academic · AI Course</span>
-          </div>
-          <div class="exp-role">Python · scikit-learn · TensorFlow / Keras</div>
-          <ul class="exp-list">
-            <li>Designed and trained an Artificial Neural Network model as part of an AI/Machine Learning course project.</li>
-            <li>Performed data preprocessing, feature selection, and model tuning to optimise prediction accuracy.</li>
-            <li>Evaluated model performance using metrics such as accuracy, loss curves, and confusion matrices.</li>
-            <li>Gained practical understanding of supervised learning, backpropagation, and hyperparameter optimisation.</li>
-          </ul>
-        </div>
+        {% for project in projects %}
+          <div class="exp-item">
+            <div class="exp-header">
+              <span class="exp-company">{{ project.title }}</span>
+              <span class="exp-period">{{ project.period }}</span>
+            </div>
 
-        <hr class="exp-sep">
+            <div class="exp-role">{{ project.technologies }}</div>
 
-        <div class="exp-item">
-          <div class="exp-header">
-            <span class="exp-company">Personal CV Web Application</span>
-            <span class="exp-period">Personal Project · Django</span>
+            <ul class="exp-list">
+              <li>{{ project.description|linebreaksbr }}</li>
+            </ul>
           </div>
-          <div class="exp-role">Python · Django · HTML · CSS · Docker</div>
-          <ul class="exp-list">
-            <li>Built a full-stack personal CV web app using the Django framework with a custom template system.</li>
-            <li>Structured the project with reusable template includes, layout inheritance, and static/media file management.</li>
-            <li>Secured sensitive settings using <code>django-environ</code> with a <code>.env</code> file for environment variable management.</li>
-            <li>Containerised the application with Docker and Docker Compose for reproducible deployment.</li>
-            <li>Connected the project to GitHub with Git version control; managed <code>.gitignore</code> to exclude sensitive files.</li>
-          </ul>
-        </div>
+
+          {% if not forloop.last %}
+            <hr class="exp-sep">
+          {% endif %}
+
+        {% empty %}
+          <div class="exp-item">
+            <div class="exp-header">
+              <span class="exp-company">ML / ANN — Artificial Neural Network Project</span>
+              <span class="exp-period">Academic · AI Course</span>
+            </div>
+            <div class="exp-role">Python · scikit-learn · TensorFlow / Keras</div>
+            <ul class="exp-list">
+              <li>Designed and trained an Artificial Neural Network model as part of an AI/Machine Learning course project.</li>
+              <li>Performed data preprocessing, feature selection, and model tuning to optimise prediction accuracy.</li>
+              <li>Evaluated model performance using metrics such as accuracy, loss curves, and confusion matrices.</li>
+              <li>Gained practical understanding of supervised learning, backpropagation, and hyperparameter optimisation.</li>
+            </ul>
+          </div>
+
+          <hr class="exp-sep">
+
+          <div class="exp-item">
+            <div class="exp-header">
+              <span class="exp-company">Personal CV Web Application</span>
+              <span class="exp-period">Personal Project · Django</span>
+            </div>
+            <div class="exp-role">Python · Django · HTML · CSS · Docker</div>
+            <ul class="exp-list">
+              <li>Built a full-stack personal CV web app using the Django framework with a custom template system.</li>
+              <li>Structured the project with reusable template includes, layout inheritance, and static/media file management.</li>
+              <li>Secured sensitive settings using <code>django-environ</code> with a <code>.env</code> file for environment variable management.</li>
+              <li>Containerised the application with Docker and Docker Compose for reproducible deployment.</li>
+              <li>Connected the project to GitHub with Git version control; managed <code>.gitignore</code> to exclude sensitive files.</li>
+            </ul>
+          </div>
+        {% endfor %}
       </section>
 
       <section class="section">
         <div class="section-label">Education</div>
-        <div class="edu-school">Piri Reis University</div>
-        <div class="edu-faculty">Faculty of Engineering</div>
-        <div class="edu-dept">Department of Information Systems Engineering</div>
-        <div class="edu-campus">PRU Maritime Campus, Istanbul</div>
-        <span class="edu-badge">4th Year · Expected Graduation 2026</span>
+
+        {% if education.school %}
+          <div class="edu-school">{{ education.school }}</div>
+          <div class="edu-faculty">{{ education.faculty }}</div>
+          <div class="edu-dept">{{ education.department }}</div>
+          <div class="edu-campus">{{ education.campus }}</div>
+          <span class="edu-badge">{{ education.badge }}</span>
+        {% else %}
+          <div class="edu-school">Piri Reis University</div>
+          <div class="edu-faculty">Faculty of Engineering</div>
+          <div class="edu-dept">Department of Information Systems Engineering</div>
+          <div class="edu-campus">PRU Maritime Campus, Istanbul</div>
+          <span class="edu-badge">4th Year · Expected Graduation 2026</span>
+        {% endif %}
       </section>
 
       <section class="section">
         <div class="section-label">Areas of Interest</div>
+
         <div class="interest-grid">
-          <div class="interest-card">
-            <div class="interest-icon">[mob]</div>
-            <div class="interest-title">Mobile Development</div>
-            <div class="interest-desc">Native Android with Kotlin; cross-platform interest.</div>
-          </div>
-          <div class="interest-card">
-            <div class="interest-icon">[sec]</div>
-            <div class="interest-title">Cybersecurity</div>
-            <div class="interest-desc">System security, network defence, IT-legal intersections.</div>
-          </div>
-          <div class="interest-card">
-            <div class="interest-icon">[srv]</div>
-            <div class="interest-title">Server &amp; Infra</div>
-            <div class="interest-desc">Hands-on experience with hosting panels and server ops.</div>
-          </div>
-          <div class="interest-card">
-            <div class="interest-icon">[cld]</div>
-            <div class="interest-title">Cloud Computing</div>
-            <div class="interest-desc">Google Cloud &amp; AWS training; cloud-native interest.</div>
-          </div>
+          {% for interest in interests %}
+            <div class="interest-card">
+              <div class="interest-icon">{{ interest.icon }}</div>
+              <div class="interest-title">{{ interest.title }}</div>
+              <div class="interest-desc">{{ interest.description }}</div>
+            </div>
+
+          {% empty %}
+            <div class="interest-card">
+              <div class="interest-icon">[mob]</div>
+              <div class="interest-title">Mobile Development</div>
+              <div class="interest-desc">Native Android with Kotlin; cross-platform interest.</div>
+            </div>
+
+            <div class="interest-card">
+              <div class="interest-icon">[sec]</div>
+              <div class="interest-title">Cybersecurity</div>
+              <div class="interest-desc">System security, network defence, IT-legal intersections.</div>
+            </div>
+
+            <div class="interest-card">
+              <div class="interest-icon">[srv]</div>
+              <div class="interest-title">Server &amp; Infra</div>
+              <div class="interest-desc">Hands-on experience with hosting panels and server ops.</div>
+            </div>
+
+            <div class="interest-card">
+              <div class="interest-icon">[cld]</div>
+              <div class="interest-title">Cloud Computing</div>
+              <div class="interest-desc">Google Cloud &amp; AWS training; cloud-native interest.</div>
+            </div>
+          {% endfor %}
         </div>
       </section>
     </div>
 
-    <!-- SIDEBAR -->
     <aside>
       <div class="card">
         <div class="section-label">Technical Skills</div>
-        <div class="skill-group">
-          <div class="skill-group-label">Programming Languages</div>
-          <div class="skill-tags">
-            <span class="skill-tag hi">Python</span>
-            <span class="skill-tag hi">Java</span>
-            <span class="skill-tag hi">Kotlin</span>
-            <span class="skill-tag hi">JavaScript</span>
-            <span class="skill-tag">C</span>
-            <span class="skill-tag">C++</span>
-            <span class="skill-tag">SQL</span>
-            <span class="skill-tag">Bash</span>
-            <span class="skill-tag">HTML</span>
-            <span class="skill-tag">CSS</span>
+
+        {% for category in skill_categories %}
+          <div class="skill-group">
+            <div class="skill-group-label">{{ category.name }}</div>
+
+            <div class="skill-tags">
+              {% for skill in category.skills.all %}
+                <span class="skill-tag {% if skill.is_highlighted %}hi{% endif %}">
+                  {{ skill.name }}
+                </span>
+              {% endfor %}
+            </div>
           </div>
-        </div>
-        <div class="skill-group">
-          <div class="skill-group-label">Frameworks &amp; Tools</div>
-          <div class="skill-tags">
-            <span class="skill-tag hi">Django</span>
-            <span class="skill-tag hi">Docker</span>
-            <span class="skill-tag">Git</span>
-            <span class="skill-tag">MS Office</span>
+
+        {% empty %}
+          <div class="skill-group">
+            <div class="skill-group-label">Programming Languages</div>
+            <div class="skill-tags">
+              <span class="skill-tag hi">Python</span>
+              <span class="skill-tag hi">Java</span>
+              <span class="skill-tag hi">Kotlin</span>
+              <span class="skill-tag hi">JavaScript</span>
+              <span class="skill-tag">C</span>
+              <span class="skill-tag">C++</span>
+              <span class="skill-tag">SQL</span>
+              <span class="skill-tag">Bash</span>
+              <span class="skill-tag">HTML</span>
+              <span class="skill-tag">CSS</span>
+            </div>
           </div>
-        </div>
-        <div class="skill-group">
-          <div class="skill-group-label">Server &amp; Panel Management</div>
-          <div class="skill-tags">
-            <span class="skill-tag hi">WHMCS</span>
-            <span class="skill-tag hi">cPanel</span>
-            <span class="skill-tag hi">sPanel</span>
+
+          <div class="skill-group">
+            <div class="skill-group-label">Frameworks &amp; Tools</div>
+            <div class="skill-tags">
+              <span class="skill-tag hi">Django</span>
+              <span class="skill-tag hi">Docker</span>
+              <span class="skill-tag">Git</span>
+              <span class="skill-tag">MS Office</span>
+            </div>
           </div>
-        </div>
-        <div class="skill-group">
-          <div class="skill-group-label">Cloud Platforms</div>
-          <div class="skill-tags">
-            <span class="skill-tag">AWS Educate</span>
-            <span class="skill-tag">Google Cloud</span>
+
+          <div class="skill-group">
+            <div class="skill-group-label">Server &amp; Panel Management</div>
+            <div class="skill-tags">
+              <span class="skill-tag hi">WHMCS</span>
+              <span class="skill-tag hi">cPanel</span>
+              <span class="skill-tag hi">sPanel</span>
+            </div>
           </div>
-        </div>
+
+          <div class="skill-group">
+            <div class="skill-group-label">Cloud Platforms</div>
+            <div class="skill-tags">
+              <span class="skill-tag">AWS Educate</span>
+              <span class="skill-tag">Google Cloud</span>
+            </div>
+          </div>
+        {% endfor %}
       </div>
 
       <div class="card">
         <div class="section-label">Languages</div>
-        <div class="lang-row">
-          <span class="lang-name">Turkish</span>
-          <span class="lang-level">Native</span>
-        </div>
-        <div class="lang-row">
-          <span class="lang-name">English</span>
-          <span class="lang-level">C1 — Advanced</span>
-        </div>
+
+        {% for language in languages %}
+          <div class="lang-row">
+            <span class="lang-name">{{ language.name }}</span>
+            <span class="lang-level">{{ language.level }}</span>
+          </div>
+
+        {% empty %}
+          <div class="lang-row">
+            <span class="lang-name">Turkish</span>
+            <span class="lang-level">Native</span>
+          </div>
+
+          <div class="lang-row">
+            <span class="lang-name">English</span>
+            <span class="lang-level">C1 — Advanced</span>
+          </div>
+        {% endfor %}
       </div>
 
       <div class="card">
         <div class="section-label">AWS Educate Badges</div>
+
         <div class="aws-grid">
-          <span class="aws-badge">Cloud 101</span>
-          <span class="aws-badge">Networking</span>
-          <span class="aws-badge">Storage</span>
-          <span class="aws-badge">Compute</span>
-          <span class="aws-badge">Databases</span>
-          <span class="aws-badge">Security</span>
+          {% for badge in aws_badges %}
+            <span class="aws-badge">{{ badge.name }}</span>
+
+          {% empty %}
+            <span class="aws-badge">Cloud 101</span>
+            <span class="aws-badge">Networking</span>
+            <span class="aws-badge">Storage</span>
+            <span class="aws-badge">Compute</span>
+            <span class="aws-badge">Databases</span>
+            <span class="aws-badge">Security</span>
+          {% endfor %}
         </div>
-        <p class="aws-note">6× Getting Started training badges — Amazon Web Services</p>
+
+        {% if aws_badges %}
+          <p class="aws-note">
+            {{ aws_badges|length }}× Getting Started training badges — Amazon Web Services
+          </p>
+        {% else %}
+          <p class="aws-note">6× Getting Started training badges — Amazon Web Services</p>
+        {% endif %}
       </div>
 
       <div class="card">
         <div class="section-label">Certificates &amp; Events</div>
-        <div class="cert-item">
-          <span class="cert-arrow">›</span>
-          <span>
-            <span class="cert-org">COMPRU-GDSC Piri Reis</span>
-            "IT Ecosystem in Europe &amp; the Netherlands" — Conference Participant
-          </span>
-        </div>
-        <div class="cert-item">
-          <span class="cert-arrow">›</span>
-          <span>
-            <span class="cert-org">ILAWS &amp; COMPRU-GDSC</span>
-            "Cybersecurity in Practice: IT &amp; Legal Perspectives" — Training
-          </span>
-        </div>
-        <div class="cert-item">
-          <span class="cert-arrow">›</span>
-          <span>
-            <span class="cert-org">Google DSC Piri Reis</span>
-            "Cloud Computing: Google Cloud" — Training
-          </span>
-        </div>
-        <div class="cert-item">
-          <span class="cert-arrow">›</span>
-          <span>
-            <span class="cert-org">Informatics Club · Piri Reis</span>
-            PRU Tech Summit '24 — Executive Committee &amp; Participant
-          </span>
-        </div>
-        <div class="cert-item">
-          <span class="cert-arrow">›</span>
-          <span>
-            <span class="cert-org">Cisco Networking Academy</span>
-            Data Science Essentials with Python — Course Completion Certificate
-          </span>
-        </div>
+
+        {% for certificate in certificates %}
+          <div class="cert-item">
+            <span class="cert-arrow">›</span>
+            <span>
+              <span class="cert-org">{{ certificate.organization }}</span>
+              {{ certificate.title }}
+            </span>
+          </div>
+
+        {% empty %}
+          <div class="cert-item">
+            <span class="cert-arrow">›</span>
+            <span>
+              <span class="cert-org">COMPRU-GDSC Piri Reis</span>
+              "IT Ecosystem in Europe &amp; the Netherlands" — Conference Participant
+            </span>
+          </div>
+
+          <div class="cert-item">
+            <span class="cert-arrow">›</span>
+            <span>
+              <span class="cert-org">ILAWS &amp; COMPRU-GDSC</span>
+              "Cybersecurity in Practice: IT &amp; Legal Perspectives" — Training
+            </span>
+          </div>
+
+          <div class="cert-item">
+            <span class="cert-arrow">›</span>
+            <span>
+              <span class="cert-org">Google DSC Piri Reis</span>
+              "Cloud Computing: Google Cloud" — Training
+            </span>
+          </div>
+
+          <div class="cert-item">
+            <span class="cert-arrow">›</span>
+            <span>
+              <span class="cert-org">Informatics Club · Piri Reis</span>
+              PRU Tech Summit '24 — Executive Committee &amp; Participant
+            </span>
+          </div>
+
+          <div class="cert-item">
+            <span class="cert-arrow">›</span>
+            <span>
+              <span class="cert-org">Cisco Networking Academy</span>
+              Data Science Essentials with Python — Course Completion Certificate
+            </span>
+          </div>
+        {% endfor %}
       </div>
     </aside>
   </div>
 
-  <footer class="footer">ece.gokcen.saltan &nbsp;·&nbsp; information systems engineering &nbsp;·&nbsp; 2026</footer>
+  <footer class="footer">
+    {% if profile.full_name and profile.title %}
+      {{ profile.full_name }} &nbsp;·&nbsp; {{ profile.title }} &nbsp;·&nbsp; 2026
+    {% else %}
+      ece.gokcen.saltan &nbsp;·&nbsp; information systems engineering &nbsp;·&nbsp; 2026
+    {% endif %}
+  </footer>
 
 </main>
 </body>

@@ -1,4 +1,5 @@
 version: "3.8"
+
 services:
   app:
     build:
@@ -6,6 +7,14 @@ services:
       dockerfile: Dockerfile
     ports:
       - "0.0.0.0:8000:8000"
-    command: python manage.py runserver 0.0.0.0:8000
+    env_file:
+      - .env                          # .env dosyasını container'a tanıt
+    volumes:
+      - .:/srv/app                    # canlı kod değişikliği için
+      - static-data:/srv/app/staticfiles
+    command: >
+      sh -c "python manage.py migrate &&
+             python manage.py runserver 0.0.0.0:8000"
+
 volumes:
   static-data:

@@ -1,0 +1,26 @@
+{% extends 'layout.html' %}
+
+{% block content %}
+
+<h1>Contact</h1>
+
+<form>
+    <div class="mb-3">
+        <label class="form-label">Ad Soyad</label>
+        <input type="text" class="form-control" placeholder="Adınızı yazın">
+    </div>
+
+    <div class="mb-3">
+        <label class="form-label">Email</label>
+        <input type="email" class="form-control" placeholder="Email adresiniz">
+    </div>
+
+    <div class="mb-3">
+        <label class="form-label">Mesaj</label>
+        <textarea class="form-control" rows="4" placeholder="Mesajınızı yazın"></textarea>
+    </div>
+
+    <button type="submit" class="btn btn-primary">Gönder</button>
+</form>
+
+{% endblock %}
